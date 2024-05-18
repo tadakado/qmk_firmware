@@ -124,8 +124,24 @@ endif
 ifeq ($(strip $(POINTING_DEVICE_ENABLE)), yes)
     OPT_DEFS += -DPOINTING_DEVICE_ENABLE
     MOUSE_ENABLE := yes
-    SRC += $(QUANTUM_DIR)/pointing_device.c
+    SRC += $(QUANTUM_DIR)/pointing_device/pointing_device.c
+    SRC += $(QUANTUM_DIR)/pointing_device/pointing_device_drivers.c
+    SRC += $(QUANTUM_DIR)/pointing_device/pointing_device_auto_mouse.c
+    OPT_DEFS += -DPOINTING_DEVICE_ENABLE
+    MOUSE_ENABLE := yes
+    VPATH += $(QUANTUM_DIR)/pointing_device
+    OPT_DEFS += -DPOINTING_DEVICE_DRIVER_$(strip $(POINTING_DEVICE_DRIVER))
+    ifeq ($(strip $(POINTING_DEVICE_DRIVER)), cirque_pinnacle_i2c)
+        # OPT_DEFS += -DSTM32_I2C -DHAL_USE_I2C=TRUE
+        # OPT_DEFS += -DHAL_USE_I2C=TRUE
+        SRC += drivers/sensors/cirque_pinnacle.c
+        SRC += drivers/sensors/cirque_pinnacle_gestures.c
+        SRC += drivers/sensors/cirque_pinnacle_i2c.c
+        SRC += $(QUANTUM_DIR)/pointing_device/pointing_device_gestures.c
+        QUANTUM_LIB_SRC += i2c_master.c
+    endif
 endif
+
 
 VALID_EEPROM_DRIVER_TYPES := vendor custom transient i2c spi
 EEPROM_DRIVER ?= vendor

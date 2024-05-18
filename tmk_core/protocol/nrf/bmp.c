@@ -748,6 +748,7 @@ bool process_record_user_bmp(uint16_t keycode, keyrecord_t* record) {
                 select_usb();
                 return false;
             case ADV_ID0 ... ADV_ID7:
+		select_ble();
                 BMPAPI->ble.advertise(keycode - ADV_ID0);
                 return false;
             case AD_WO_L:

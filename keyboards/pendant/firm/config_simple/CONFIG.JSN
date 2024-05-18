@@ -1,0 +1,17 @@
+{"config":
+    {
+        "version":2,
+        "device_info":{"vid":"0xcafe","pid":"0x4650",
+            "name":"tk46v5","manufacture":"tadakado","description":"tk46 v5 2024/05/08"},
+        "matrix":{"rows":1,"cols":1,"device_rows":1,"device_cols":1,
+            "debounce":2,"is_left_hand":1,"diode_direction":2,
+            "row_pins":[8],
+            "col_pins":[7],
+        "layout":[1]},
+        "mode":"SINGLE","startup":1,
+        "peripheral":{"max_interval":15,"min_interval":10,"slave_latency":0},
+        "central":{"max_interval":15,"min_interval":10,"slave_latency":0},
+        "led":{"pin":255,"num":1},
+        "keymap":{"locale":"JP","use_ascii":0},
+        "reserved":[0,0,0,0,0,0,0,0]
+}}

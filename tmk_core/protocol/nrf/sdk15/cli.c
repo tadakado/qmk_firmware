@@ -58,6 +58,7 @@ static MSCMD_USER_RESULT usrcmd_led_control(MSOPT *msopt, MSCMD_USER_OBJECT usro
 static MSCMD_USER_RESULT usrcmd_eeprom_control(MSOPT *msopt, MSCMD_USER_OBJECT usrobj);
 static MSCMD_USER_RESULT usrcmd_webconfig_enter(MSOPT *msopt, MSCMD_USER_OBJECT usrobj);
 static MSCMD_USER_RESULT usrcmd_i2c_test(MSOPT *msopt, MSCMD_USER_OBJECT usrobj);
+static MSCMD_USER_RESULT usrcmd_i2c_write(MSOPT *msopt, MSCMD_USER_OBJECT usrobj);
 static MSCMD_USER_RESULT usrcmd_cpu_temp(MSOPT *msopt, MSCMD_USER_OBJECT usrobj);
 
 static MSCMD_USER_RESULT usrcmd_file_streaming_mode(MSOPT *msopt, MSCMD_USER_OBJECT usrobj);
@@ -94,6 +95,7 @@ static const MSCMD_COMMAND_TABLE table[] = {
     {"ee", usrcmd_eeprom_control, "eeprom control"},
     {"web", usrcmd_webconfig_enter, "Start web config mode"},
     {"i2c", usrcmd_i2c_test, "Test i2c"},
+    {"i2cw", usrcmd_i2c_write, "Write i2c"},
     {"temp", usrcmd_cpu_temp, "Measure CPU temperature"},
     {"file", usrcmd_file_streaming_mode, "Enter file streaming mode"},
     {"ind", usrcmd_indicator, "Test indicator LED"},
@@ -508,23 +510,67 @@ static MSCMD_USER_RESULT usrcmd_i2c_test(MSOPT *msopt, MSCMD_USER_OBJECT usrobj)
     char arg[16];
     uint8_t addr;
     uint8_t reg;
-    uint8_t dat;
+    uint8_t dat[48];
     uint8_t res;
+    uint8_t len;
     if (msopt->argc >= 3) {
         msopt_get_argv(msopt, 1, arg, sizeof(arg));
-        addr = (uint8_t)atoi(arg);
+        addr = (uint8_t)strtol(arg, NULL, 0);
         msopt_get_argv(msopt, 2, arg, sizeof(arg));
-        reg = (uint8_t)atoi(arg);
+        reg = (uint8_t)strtol(arg, NULL, 0);
+	if (msopt->argc >= 4) {
+            msopt_get_argv(msopt, 3, arg, sizeof(arg));
+            len = (uint8_t)strtol(arg, NULL, 0);
+	} else {
+	    len = 1;
+	}
+        if (len > sizeof(dat))
+        {
+            len = sizeof(dat);
+        }
+        for(int i = 0; i < sizeof(dat); i++) {
+            dat[i] = 0;
+        }
 
-        i2c_init();
-        res = i2c_readReg(addr, reg, &dat, 1, 0);
-        i2c_uninit();
+        res = i2c_readReg(I2C_7BIT_ADDR(addr), reg, dat, len, 0);
 
-        tfp_printf("0x%02x:0x%02x res:%d dat:%d\r\n", addr, reg, res, dat);
+        tfp_printf("0x%02x:0x%02x res:%d dat:0x%02x", addr, reg, res, dat[0]);
+        for(int i = 1; i < len; i++) {
+            tfp_printf(" 0x%02x", dat[i]);
+        }
+        tfp_printf("\r\n");
     }
     else
     {
-        tfp_printf("Invalid option\r\n");
+        tfp_printf("usage: i2c addr reg len\r\n");
+    }
+    return 0;
+}
+
+static MSCMD_USER_RESULT usrcmd_i2c_write(MSOPT *msopt, MSCMD_USER_OBJECT usrobj)
+{
+    char arg[16];
+    uint8_t addr;
+    uint8_t data[48];
+    uint8_t len = 0;
+    if (msopt->argc >= 4) {
+        msopt_get_argv(msopt, 1, arg, sizeof(arg));
+        addr = (uint8_t)strtol(arg, NULL, 0);
+        while (msopt_get_argv(msopt, 2 + len, arg, sizeof(arg)) == MSOPT_RESULT_OK) {
+            if (len < 48) {
+                data[len++] = (uint8_t)strtol(arg, NULL, 0);
+            } else {
+                tfp_printf("Data trancated (max 48 bytes)\r\n");
+            }
+        }
+
+        i2c_transmit(I2C_7BIT_ADDR(addr), data, len, 0);
+
+        tfp_printf("I2C write done\r\n");
+    }
+    else
+    {
+        tfp_printf("usage: i2cw addr reg data ...\r\n");
     }
     return 0;
 }

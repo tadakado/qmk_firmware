@@ -55,6 +55,7 @@ static inline uint8_t i2c_transmit(uint8_t address, const uint8_t* data, uint16_
 {
   uint8_t i2c_temporary_buffer[I2C_MAX_DATA_LEN];
   uint8_t *p_send;
+  uint8_t out;
 
   if (data <= (uint8_t*)0xFFFFF)
   {
@@ -68,23 +69,37 @@ static inline uint8_t i2c_transmit(uint8_t address, const uint8_t* data, uint16_
     p_send = (uint8_t*)data;
   }
 
-  return BMPAPI->i2cm.transmit(address >> 1, (uint8_t*)p_send, length);
+  i2c_init();
+  out = BMPAPI->i2cm.transmit(address >> 1, (uint8_t*)p_send, length);
+  i2c_uninit();
+  return out;
 }
 
 static inline uint8_t i2c_receive(uint8_t address, uint8_t* data, uint16_t length, uint16_t timeout)
 {
-  return BMPAPI->i2cm.receive(address >> 1, data, length);
+  uint8_t out;
+
+  i2c_init();
+  out = BMPAPI->i2cm.receive(address >> 1, data, length);
+  i2c_uninit();
+  return out;
 }
 
 static inline uint8_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t* data, uint16_t length, uint16_t timeout)
 {
-  return BMPAPI->i2cm.read_reg(devaddr >> 1, regaddr, data, length, timeout);
+  uint8_t out;
+
+  i2c_init();
+  out = BMPAPI->i2cm.read_reg(devaddr >> 1, regaddr, data, length, timeout);
+  i2c_uninit();
+  return out;
 }
 
 static inline uint8_t i2c_writeReg(uint8_t devaddr, uint8_t regaddr, const uint8_t* data, uint16_t length, uint16_t timeout)
 {
   uint8_t i2c_temporary_buffer[I2C_MAX_DATA_LEN];
   uint8_t *p_send;
+  uint8_t out;
 
   if (data <= (uint8_t*)0xFFFFF)
   {
@@ -98,7 +113,10 @@ static inline uint8_t i2c_writeReg(uint8_t devaddr, uint8_t regaddr, const uint8
     p_send = (uint8_t*)data;
   }
 
-  return BMPAPI->i2cm.write_reg(devaddr >> 1, regaddr, p_send, length, timeout);
+  i2c_init();
+  out = BMPAPI->i2cm.write_reg(devaddr >> 1, regaddr, p_send, length, timeout);
+  i2c_uninit();
+  return out;
 }
 
 
