@@ -195,13 +195,15 @@ typedef struct {
     uint16_t usage;
 } __attribute__((packed)) report_extra_t;
 
+typedef int8_t mouse_xy_report_t;
+
 typedef struct {
 #ifdef MOUSE_SHARED_EP
     uint8_t report_id;
 #endif
     uint8_t buttons;
-    int8_t  x;
-    int8_t  y;
+    mouse_xy_report_t  x;
+    mouse_xy_report_t  y;
     int8_t  v;
     int8_t  h;
 } __attribute__((packed)) report_mouse_t;
@@ -313,6 +315,10 @@ void del_key_bit(report_keyboard_t* keyboard_report, uint8_t code);
 void add_key_to_report(report_keyboard_t* keyboard_report, uint8_t key);
 void del_key_from_report(report_keyboard_t* keyboard_report, uint8_t key);
 void clear_keys_from_report(report_keyboard_t* keyboard_report);
+
+#ifdef MOUSE_ENABLE
+bool has_mouse_report_changed(report_mouse_t* new_report, report_mouse_t* old_report);
+#endif
 
 #ifdef __cplusplus
 }
