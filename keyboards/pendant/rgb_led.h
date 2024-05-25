@@ -14,7 +14,7 @@
 extern uint8_t colors[][3];
 
 void rgb_load(void);
-void rgb_set(uint8_t s, uint8_t i, uint8_t r, uint8_t g, uint8_t b);
+void rgb_set(uint8_t p, uint8_t i, uint8_t r, uint8_t g, uint8_t b);
 void rgb_set_all(uint8_t r, uint8_t g, uint8_t b);
 void rgb_init(void);
 void rgb_set_layer(layer_state_t state);

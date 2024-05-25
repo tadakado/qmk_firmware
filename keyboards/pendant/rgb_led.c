@@ -24,7 +24,7 @@ uint32_t rgb_off_time;
 uint8_t colors[][3] =
 	{{RGB_RED}, {RGB_GREEN}, {RGB_BLUE}, {RGB_YELLOW}, {RGB_MAGENTA},
 	 {RGB_CYAN}, {RGB_WHITE}, {RGB_ORANGE}, {RGB_PINK}, {RGB_PURPLE}};
-static uint8_t rgb_addr[N_CON] = {I2C_7BIT_ADDR(0x30), I2C_7BIT_ADDR(0x31)};
+static uint8_t rgb_addr[N_CON] = {I2C_7BIT_ADDR(0x31), I2C_7BIT_ADDR(0x30)};
 static uint8_t rgb_load_command[] = {0xff, N_RGB};
 struct {
     uint8_t addr;
@@ -40,10 +40,10 @@ void rgb_load(void) {
   i2c_uninit();
 }
 
-void rgb_set(uint8_t s, uint8_t i, uint8_t r, uint8_t g, uint8_t b) {
-  for (uint8_t j=0; j<2; j++) {
-    if (s & 1<<j) {
-      setrgb(r, g, b, (LED_TYPE *)&rgb_data[j].rgb[i]);
+void rgb_set(uint8_t p, uint8_t i, uint8_t r, uint8_t g, uint8_t b) {
+  for (uint8_t s=0; s<N_CON; s++) {
+    if (p & 1<<s) {
+      setrgb(r, g, b, (LED_TYPE *)&rgb_data[s].rgb[i]);
     }
   }
 }

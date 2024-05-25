@@ -33,10 +33,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* USB Device descriptor parameter */
 
 #define VENDOR_ID       0xcafe
-#define PRODUCT_ID      0x4403
-#define DEVICE_VER      0x0003
+#define PRODUCT_ID      0x4605
+#define DEVICE_VER      0x0001
 #define MANUFACTURER    tadakado
-#define PRODUCT         TK46v4
+#define PRODUCT         tk46v5
 #define DESCRIPTION     A split keyboard
 
 #define BMP_BOOTPIN_AS_RESET
