@@ -2,7 +2,6 @@
 #include "cirque_pinnacle.h"
 #include "i2c_master.h"
 #include "stdio.h"
-#include <print.h>
 
 // Masks for Cirque Register Access Protocol (RAP)
 #define WRITE_MASK 0x80
@@ -14,18 +13,10 @@ extern bool touchpad_init;
 // Reads <count> Pinnacle registers starting at <address>
 void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count) {
     uint8_t cmdByte = READ_MASK | address; // Form the READ command byte
-    uint8_t out;
-
     if (touchpad_init) {
-	out = i2c_writeReg(CIRQUE_PINNACLE_ADDR << 1, cmdByte, NULL, 0, CIRQUE_PINNACLE_TIMEOUT);
-        if (out != I2C_STATUS_SUCCESS) {
-            uprintf("error cirque_pinnacle i2c_readReg\n");
-            touchpad_init = false;
-	    return;
-        }
-        out = i2c_readReg(CIRQUE_PINNACLE_ADDR << 1, cmdByte, data, count, CIRQUE_PINNACLE_TIMEOUT);
-        if (out != I2C_STATUS_SUCCESS) {
-            uprintf("error cirque_pinnacle i2c_readReg\n");
+        i2c_write_register(CIRQUE_PINNACLE_ADDR << 1, cmdByte, NULL, 0, CIRQUE_PINNACLE_TIMEOUT);
+        if (i2c_read_register(CIRQUE_PINNACLE_ADDR << 1, cmdByte, data, count, CIRQUE_PINNACLE_TIMEOUT) != I2C_STATUS_SUCCESS) {
+            pd_dprintf("error cirque_pinnacle i2c_read_register\n");
             touchpad_init = false;
         }
     }
@@ -34,12 +25,10 @@ void RAP_ReadBytes(uint8_t address, uint8_t* data, uint8_t count) {
 // Writes single-byte <data> to <address>
 void RAP_Write(uint8_t address, uint8_t data) {
     uint8_t cmdByte = WRITE_MASK | address; // Form the WRITE command byte
-    uint8_t out;
 
     if (touchpad_init) {
-        out = i2c_writeReg(CIRQUE_PINNACLE_ADDR << 1, cmdByte, &data, sizeof(data), CIRQUE_PINNACLE_TIMEOUT);
-        if (out != I2C_STATUS_SUCCESS) {
-            uprintf("error cirque_pinnacle i2c_writeReg\n");
+        if (i2c_write_register(CIRQUE_PINNACLE_ADDR << 1, cmdByte, &data, sizeof(data), CIRQUE_PINNACLE_TIMEOUT) != I2C_STATUS_SUCCESS) {
+            pd_dprintf("error cirque_pinnacle i2c_write_register\n");
             touchpad_init = false;
         }
     }

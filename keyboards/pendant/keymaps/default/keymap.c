@@ -85,6 +85,7 @@ void status() {
 void pointing_device_init_user(void) {
     cirque_pinnacle_init();
     uart_ch559_init();
+    set_auto_mouse_enable(true);
 }
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {

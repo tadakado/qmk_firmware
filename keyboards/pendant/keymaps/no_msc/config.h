@@ -38,6 +38,9 @@
 #define QK_LAYER_TAP_TOGGLE_GET_LAYER(kc) ((kc)&0x1F)
 #define QK_LAYER_TAP_GET_LAYER(kc) (((kc) >> 8) & 0xF)
 
+#define i2c_readReg(devaddr, regaddr, data, length, timeout) i2c_read_register(devaddr, regaddr, data, length, timeout)
+#define i2c_writeReg(devaddr, regaddr, data, length, timeout) i2c_write_register(devaddr, regaddr, data, length, timeout)
+
 // RGB LED
 #define N_RGB 7
 #define STATUS_RGB 6
