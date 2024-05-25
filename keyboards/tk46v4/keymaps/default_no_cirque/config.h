@@ -24,3 +24,7 @@
 #undef IGNORE_MOD_TAP_INTERRUPT
 
 #define GUI_COMBO_TAPPING_TERM 50
+
+// RGB LED
+#define N_RGB 7
+#define STATUS_RGB 6

@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT_ID      0x4604
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    tadakado
-#define PRODUCT         TK46v4
+#define PRODUCT         tk46v4
 #define DESCRIPTION     A split keyboard
 
 #define BMP_BOOTPIN_AS_RESET

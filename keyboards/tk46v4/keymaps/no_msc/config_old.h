@@ -20,8 +20,6 @@
 
 #define MASTER_LEFT
 
-#define MATRIX_SCAN_TIME_MS 17 // minimum 5ms, default 17ms
-
 #define PERMISSIVE_HOLD
 #undef IGNORE_MOD_TAP_INTERRUPT
 
@@ -37,10 +35,6 @@
 #define QK_LAYER_MOD_GET_LAYER(kc) (((kc) >> 5) & 0xF)
 #define QK_LAYER_TAP_TOGGLE_GET_LAYER(kc) ((kc)&0x1F)
 #define QK_LAYER_TAP_GET_LAYER(kc) (((kc) >> 8) & 0xF)
-
-// RGB LED
-#define N_RGB 7
-#define STATUS_RGB 6
 
 // Cirque Pinnacle curved overlay
 #define CIRQUE_PINNACLE_CURVED_OVERLAY
