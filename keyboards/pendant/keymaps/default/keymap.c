@@ -97,6 +97,12 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, re
     return pointing_device_combine_reports(left_report, right_report);
 }
 
+extern bool is_touch_down;
+
+bool auto_mouse_activation(report_mouse_t mouse_report) {
+    return is_touch_down;
+}
+
 // IO Expander
 //   called from matrix_init() in tmk_core/protocol/nrf/matrix.c
 
@@ -126,7 +132,9 @@ void matrix_scan_user(void) {
 	    rgb_load();
         rgb_update_time();
     }
-    rgb_sleep(5);
+    if (!is_touch_down) {
+        rgb_sleep(5);
+    }
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
