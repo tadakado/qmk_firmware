@@ -81,6 +81,13 @@ void status() {
 
 void pointing_device_init_user(void) {
     cirque_pinnacle_init();
+    set_auto_mouse_enable(true);
+}
+
+extern bool is_touch_down;
+
+bool auto_mouse_activation(report_mouse_t mouse_report) {
+    return is_touch_down;
 }
 
 //
@@ -103,7 +110,9 @@ void matrix_scan_user(void) {
 	    rgb_load();
         rgb_update_time();
     }
-    rgb_sleep(5);
+    if (!is_touch_down) {
+        rgb_sleep(5);
+    }
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
